@@ -54,3 +54,16 @@ def gen_service_time():
     pkt_len = expn_random(1/AVG_PKT_LEN)
     service_time = pkt_len/TRANS_RATE
     return service_time
+
+# Generate all events for M/M/1 by default, M/M/1/K if K > 0
+def gen_events(rate, K=0):
+    events = []
+    if K == 0:
+        # Infinite queue case
+        a = gen_arrivals(rate)
+        events = sorted(a+gen_departures(a)+gen_observers(rate), key=lambda e: e['time'])
+    else:
+        # Finite queue case
+        a = gen_arrivals(rate)
+        events = sorted(a+gen_observers(rate), key=lambda e: e['time'])
+    return events
