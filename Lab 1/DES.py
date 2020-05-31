@@ -194,3 +194,19 @@ def question4(f_name='q4.csv', w_type='w'):
         w = csv.writer(f, dialect='excel', delimiter=',')
         w.writerow(TITLES)
         w.writerow([result[t] for t in TITLES])
+
+# Q6
+def question6(f_name='q4.csv', w_type='w'):
+    # 0.25 through 0.95
+    q_util_list = [i/100 for i in range(50,150,10)]
+    K_list = [10,25,50]
+    results=[]
+    for q_util in q_util_list:
+        for K in K_list:
+            results.append(simulateMM1K(q_util,K))
+            print(results[-1])
+    with open(f_name, w_type, newline='') as f:
+        w = csv.writer(f, dialect='excel', delimiter=',')
+        w.writerow(TITLES_K)
+        for r in results:
+            w.writerow([r[t] for t in TITLES_K])
