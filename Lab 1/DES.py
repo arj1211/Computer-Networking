@@ -67,3 +67,15 @@ def gen_events(rate, K=0):
         a = gen_arrivals(rate)
         events = sorted(a+gen_observers(rate), key=lambda e: e['time'])
     return events
+
+# Q1
+def question1(f_name='q1.csv', w_type='w'):
+    rate = 75
+    iters = int(1E3)
+    randomvars = [expn_random(rate) for i in range(iters)]
+    mean = sum(randomvars)/len(randomvars)
+    variance = sum( [(x - mean) ** 2 for x in randomvars] ) / len(randomvars)
+    with open(f_name, w_type, newline='') as f:
+        w = csv.writer(f, dialect='excel', delimiter=',')
+        w.writerow(['Mean','Variance'])
+        w.writerow([mean,variance])
