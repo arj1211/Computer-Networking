@@ -116,3 +116,26 @@ def question1(f_name='q1.csv', w_type='w'):
         w = csv.writer(f, dialect='excel', delimiter=',')
         w.writerow(['Mean','Variance'])
         w.writerow([mean,variance])
+
+# Q3
+def question3(f_name='q3.csv', w_type='w'):
+    # 0.25 through 0.95
+    q_util_list = [i/100 for i in range(25,105,10)]
+    # hold results returned from simulation iterations
+    results = []
+    for i in q_util_list:
+        results.append(simulateMM1(i))
+    with open(f_name, w_type, newline='') as f:
+        w = csv.writer(f, dialect='excel', delimiter=',')
+        w.writerow(TITLES)
+        for r in results:
+            w.writerow([r[t] for t in TITLES])
+
+# Q4
+def question4(f_name='q4.csv', w_type='w'):
+    q_util = 1.2
+    result = simulateMM1(q_util)
+    with open(f_name, w_type, newline='') as f:
+        w = csv.writer(f, dialect='excel', delimiter=',')
+        w.writerow(TITLES)
+        w.writerow([result[t] for t in TITLES])
