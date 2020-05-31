@@ -7,6 +7,7 @@ SIM_TIME = 1000 # T := simulation time in seconds
 AVG_PKT_LEN = 2000 # L := avg len of pkt in bits
 
 TITLES = ["Queue_Util", "N_a", "N_d", "N_o", "P_idle", "E[N]"]
+TITLES_K = ["Queue_Util", "Buff_size", "N_a", "N_d", "N_o", "P_idle", "E[N]", "P_loss"]
 
 # Random exponentially distributed number generator
 def expn_random(rate):
@@ -104,6 +105,60 @@ def simulateMM1(q_util):
             TITLES[3]:pkt_type_count['observation'],
             TITLES[4]:P_idle,
             TITLES[5]:TIME_AVG_PKTS_IN_Q}
+
+# Simulate M/M/1/K
+def simulateMM1K(q_util, K): # modify inf q to work with finite q
+    pkt_type_count = {
+        'arrival':0, # N_a
+        'departure':0, # N_d
+        'observation':0 # N_o
+    }
+    idle_count = 0
+    q_len_observed_over_time = []
+    current_queue_length = 0
+    pkts_lost_count = 0
+    prev_d_time = 0
+    arrival_rate = q_util*TRANS_RATE/AVG_PKT_LEN
+    event_list = gen_events(arrival_rate, K) # the 'source' where 'the next packet' is grabbed
+    ''' 'q' represents the queue where packets arrive at and depart from. 
+        We don't need an actual structure for it in this 
+        case since its size is infinite. '''
+    while len(event_list) > 0:
+        pkt = event_list.pop(0)
+        if pkt['type']=='arrival':
+            # current_queue_length+=1
+            serv_time = gen_service_time()
+            if current_queue_length < K:
+                d_time = 0
+                if current_queue_length > 0:
+                    d_time = prev_d_time + serv_time
+                else: pkt['time'] + serv_time
+                prev_d_time = d_time
+                event_list.append({'time':d_time,'type':'departure'})
+                pkt_type_count[pkt['type']]+=1
+                current_queue_length+=1
+            else: pkts_lost_count+=1
+        elif pkt['type']=='departure':
+            current_queue_length-=1
+            pkt_type_count[pkt['type']]+=1
+        else:
+            pkt_type_count[pkt['type']]+=1
+            # an observer event. observe q_len and save that info
+            q_len_observed_over_time.append(current_queue_length)
+            # if q empty right now, its idle
+            if current_queue_length==0: idle_count+=1
+    # P_idle := how often was the queue empty out of the total times we checked it?
+    P_idle = idle_count/pkt_type_count['observation']
+    TIME_AVG_PKTS_IN_Q = sum(q_len_observed_over_time)/len(q_len_observed_over_time)
+    P_loss = pkts_lost_count/(pkt_type_count['arrival']+pkts_lost_count)
+    return {TITLES_K[0]:q_util,
+            TITLES_K[1]:K,
+            TITLES_K[2]:pkt_type_count['arrival'],
+            TITLES_K[3]:pkt_type_count['departure'],
+            TITLES_K[4]:pkt_type_count['observation'],
+            TITLES_K[5]:P_idle,
+            TITLES_K[6]:TIME_AVG_PKTS_IN_Q,
+            TITLES_K[7]:P_loss}
 
 # Q1
 def question1(f_name='q1.csv', w_type='w'):
