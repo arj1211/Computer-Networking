@@ -6,6 +6,8 @@ TRANS_RATE = 1E6 # C := transmission rate of output link in bps, default=1Mbps
 SIM_TIME = 1000 # T := simulation time in seconds
 AVG_PKT_LEN = 2000 # L := avg len of pkt in bits
 
+TITLES = ["Queue_Util", "N_a", "N_d", "N_o", "P_idle", "E[N]"]
+
 # Random exponentially distributed number generator
 def expn_random(rate):
     u = random.uniform(0, 1)
@@ -67,6 +69,41 @@ def gen_events(rate, K=0):
         a = gen_arrivals(rate)
         events = sorted(a+gen_observers(rate), key=lambda e: e['time'])
     return events
+
+# Simulate M/M/1
+def simulateMM1(q_util):
+    pkt_type_count = {
+        'arrival':0, # N_a
+        'departure':0, # N_d
+        'observation':0 # N_o
+    }
+    idle_count = 0
+    current_queue_length = 0
+    q_len_observed_over_time = []
+    arrival_rate = q_util*TRANS_RATE/AVG_PKT_LEN
+    event_list = gen_events(arrival_rate) # the 'source' where 'the next packet' is grabbed
+    ''' 'q' represents the queue where packets arrive at and depart from. 
+        We don't need an actual structure for it in this 
+        case since its size is infinite. '''
+    for pkt in event_list:
+        # What type of event is it? count it
+        pkt_type_count[pkt['type']]+=1
+        if pkt['type']=='arrival': current_queue_length+=1
+        elif pkt['type']=='departure': current_queue_length-=1
+        else:
+            # an observer event. observe q_len and save that info
+            q_len_observed_over_time.append(current_queue_length)
+            # if q empty right now, its idle
+            if current_queue_length==0: idle_count+=1
+    # P_idle := how often was the queue empty out of the total times we checked it?
+    P_idle = idle_count/pkt_type_count['observation']
+    TIME_AVG_PKTS_IN_Q = sum(q_len_observed_over_time)/len(q_len_observed_over_time)
+    return {TITLES[0]:q_util,
+            TITLES[1]:pkt_type_count['arrival'],
+            TITLES[2]:pkt_type_count['departure'],
+            TITLES[3]:pkt_type_count['observation'],
+            TITLES[4]:P_idle,
+            TITLES[5]:TIME_AVG_PKTS_IN_Q}
 
 # Q1
 def question1(f_name='q1.csv', w_type='w'):
