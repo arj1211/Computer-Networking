@@ -227,8 +227,8 @@ def question4(f_name='q4.csv', w_type='w'):
 def question6(f_name='q6.csv', w_type='w'):
     print('-'*10)
     print('Question 6:')
-    # 0.25 through 0.95
-    q_util_list = [i/100 for i in range(50,150,10)]
+    # 0.5 through 1.5
+    q_util_list = [i/100 for i in range(50,160,10)]
     # buffer sizes
     K_list = [10,25,50]
     results=[]
@@ -244,7 +244,11 @@ def question6(f_name='q6.csv', w_type='w'):
         w.writerow(TITLES_K)
         for r in results:
             w.writerow([r[t] for t in TITLES_K])
-question1()
+
+# question1()
 question3()
-question4()
-question6()
+SIM_TIME = 2000
+question3('q3.csv','a')
+SIM_TIME = 1000
+# question4()
+# question6()
