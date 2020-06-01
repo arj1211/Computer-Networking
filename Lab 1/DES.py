@@ -1,6 +1,7 @@
-import random
-import math
+from math import log
 import csv
+import heapq
+import random
 
 TRANS_RATE = 1E6 # C := transmission rate of output link in bps, default=1Mbps
 SIM_TIME = 1000 # T := simulation time in seconds
@@ -9,11 +10,17 @@ AVG_PKT_LEN = 2000 # L := avg len of pkt in bits
 TITLES = ["Queue_Util", "N_a", "N_d", "N_o", "P_idle", "E[N]"]
 TITLES_K = ["Queue_Util", "Buff_size", "N_a", "N_d", "N_o", "P_idle", "E[N]", "P_loss"]
 
+
+class Event:
+    def __init__(self,etime,etype):
+        self.time=etime
+        self.type=etype
+    def __lt__(self, value):
+        self.time<value.time
+
 # Random exponentially distributed number generator
 def expn_random(rate):
-    u = random.uniform(0, 1)
-    x = -(1/rate) * math.log(1 - u)
-    return x
+    return (-(1/rate) * log(1 - random.uniform(0, 1)))
 
 # Create observer events
 def gen_observers(arrival_rate):
@@ -47,7 +54,8 @@ def gen_departures(arrival_events):
             ''' if the current pkt arrived after the previous pkt 
                 already left (ie. the queue is empty/idle) '''
             d_time = ae['time']+service_time
-        else: d_time = prev_d_time + service_time
+        else:
+            d_time = prev_d_time + service_time
         departure_events.append({'time':d_time,'type':'departure'})
         prev_d_time = d_time
     return departure_events
@@ -120,33 +128,37 @@ def simulateMM1K(q_util, K): # modify inf q to work with finite q
     prev_d_time = 0
     arrival_rate = q_util*TRANS_RATE/AVG_PKT_LEN
     event_list = gen_events(arrival_rate, K) # the 'source' where 'the next packet' is grabbed
+    event_list = [Event(e['time'],e['type']) for e in event_list]
+    heapq.heapify(event_list)
     ''' 'q' represents the queue where packets arrive at and depart from. 
         We don't need an actual structure for it in this 
         case since its size is infinite. '''
     while len(event_list) > 0:
-        pkt = event_list.pop(0)
-        if pkt['type']=='arrival':
-            # current_queue_length+=1
+        pkt = heapq.heappop(event_list)
+        if pkt.type=='arrival':
             serv_time = gen_service_time()
             if current_queue_length < K:
                 d_time = 0
                 if current_queue_length > 0:
                     d_time = prev_d_time + serv_time
-                else: pkt['time'] + serv_time
+                else:
+                    d_time = pkt.time + serv_time
                 prev_d_time = d_time
-                event_list.append({'time':d_time,'type':'departure'})
-                pkt_type_count[pkt['type']]+=1
+                heapq.heappush(event_list,Event(d_time,'departure'))
+                pkt_type_count[pkt.type]+=1
                 current_queue_length+=1
-            else: pkts_lost_count+=1
-        elif pkt['type']=='departure':
+            else:
+                pkts_lost_count+=1
+        elif pkt.type=='departure':
             current_queue_length-=1
-            pkt_type_count[pkt['type']]+=1
+            pkt_type_count[pkt.type]+=1
         else:
-            pkt_type_count[pkt['type']]+=1
+            pkt_type_count[pkt.type]+=1
             # an observer event. observe q_len and save that info
             q_len_observed_over_time.append(current_queue_length)
             # if q empty right now, its idle
-            if current_queue_length==0: idle_count+=1
+            if current_queue_length==0:
+                idle_count+=1
     # P_idle := how often was the queue empty out of the total times we checked it?
     P_idle = idle_count/pkt_type_count['observation']
     TIME_AVG_PKTS_IN_Q = sum(q_len_observed_over_time)/len(q_len_observed_over_time)
@@ -196,17 +208,22 @@ def question4(f_name='q4.csv', w_type='w'):
         w.writerow([result[t] for t in TITLES])
 
 # Q6
-def question6(f_name='q4.csv', w_type='w'):
+def question6(f_name='q6.csv', w_type='w'):
     # 0.25 through 0.95
     q_util_list = [i/100 for i in range(50,150,10)]
+
     K_list = [10,25,50]
+
     results=[]
     for q_util in q_util_list:
         for K in K_list:
             results.append(simulateMM1K(q_util,K))
-            print(results[-1])
+            # print(results[-1])
+    print(results)
+    print(len(results))
     with open(f_name, w_type, newline='') as f:
         w = csv.writer(f, dialect='excel', delimiter=',')
         w.writerow(TITLES_K)
         for r in results:
             w.writerow([r[t] for t in TITLES_K])
+
