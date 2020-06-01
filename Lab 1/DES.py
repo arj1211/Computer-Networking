@@ -174,11 +174,16 @@ def simulateMM1K(q_util, K): # modify inf q to work with finite q
 
 # Q1
 def question1(f_name='q1.csv', w_type='w'):
+    print('-'*10)
+    print('Question 1:')
     rate = 75
     iters = int(1E3)
     randomvars = [expn_random(rate) for i in range(iters)]
     mean = sum(randomvars)/len(randomvars)
     variance = sum( [(x - mean) ** 2 for x in randomvars] ) / len(randomvars)
+    print('Mean',mean)
+    print('Variance',variance)
+    print('-'*10)
     with open(f_name, w_type, newline='') as f:
         w = csv.writer(f, dialect='excel', delimiter=',')
         w.writerow(['Mean','Variance'])
@@ -186,12 +191,18 @@ def question1(f_name='q1.csv', w_type='w'):
 
 # Q3
 def question3(f_name='q3.csv', w_type='w'):
+    print('-'*10)
+    print('Question 3:')
     # 0.25 through 0.95
     q_util_list = [i/100 for i in range(25,105,10)]
     # hold results returned from simulation iterations
     results = []
     for i in q_util_list:
         results.append(simulateMM1(i))
+        print('~'*10)
+        for t in TITLES:
+            print(t,results[-1][t])
+    print('-'*10)
     with open(f_name, w_type, newline='') as f:
         w = csv.writer(f, dialect='excel', delimiter=',')
         w.writerow(TITLES)
@@ -200,8 +211,13 @@ def question3(f_name='q3.csv', w_type='w'):
 
 # Q4
 def question4(f_name='q4.csv', w_type='w'):
+    print('-'*10)
+    print('Question 4:')
     q_util = 1.2
     result = simulateMM1(q_util)
+    for t in TITLES:
+        print(t,result[t])
+    print('-'*10)
     with open(f_name, w_type, newline='') as f:
         w = csv.writer(f, dialect='excel', delimiter=',')
         w.writerow(TITLES)
@@ -209,21 +225,26 @@ def question4(f_name='q4.csv', w_type='w'):
 
 # Q6
 def question6(f_name='q6.csv', w_type='w'):
+    print('-'*10)
+    print('Question 6:')
     # 0.25 through 0.95
     q_util_list = [i/100 for i in range(50,150,10)]
-
+    # buffer sizes
     K_list = [10,25,50]
-
     results=[]
     for q_util in q_util_list:
         for K in K_list:
             results.append(simulateMM1K(q_util,K))
-            # print(results[-1])
-    print(results)
-    print(len(results))
+            print('~'*10)
+            for t in TITLES_K:
+                print(t,results[-1][t])
+    print('-'*10)
     with open(f_name, w_type, newline='') as f:
         w = csv.writer(f, dialect='excel', delimiter=',')
         w.writerow(TITLES_K)
         for r in results:
             w.writerow([r[t] for t in TITLES_K])
-
+question1()
+question3()
+question4()
+question6()
