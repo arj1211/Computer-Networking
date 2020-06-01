@@ -7,24 +7,33 @@ TRANS_RATE = 1E6 # C := transmission rate of output link in bps, default=1Mbps
 SIM_TIME = 1000 # T := simulation time in seconds
 AVG_PKT_LEN = 2000 # L := avg len of pkt in bits
 
+# headers meant for csv tables
 TITLES = ["Queue_Util", "N_a", "N_d", "N_o", "P_idle", "E[N]"]
 TITLES_K = ["Queue_Util", "Buff_size", "N_a", "N_d", "N_o", "P_idle", "E[N]", "P_loss"]
 
-
+''' a wrapper class for event time and type. 
+    Used for M/M/1/K because heapq needs comparable objects.
+    The dictionary approach from M/M/1 using a lambda to sort by time
+    doesn't work because heapq doesn't have an option to specify
+    a comparator key ''' 
 class Event:
     def __init__(self,etime,etype):
         self.time=etime
         self.type=etype
+    # the __lt__ (less than) function defines comparison for this wrapper class
     def __lt__(self, value):
         self.time<value.time
 
-# Random exponentially distributed number generator
+# Exponential random number generator
 def expn_random(rate):
     return (-(1/rate) * log(1 - random.uniform(0, 1)))
 
 # Create observer events
 def gen_observers(arrival_rate):
     observer_events = []
+    ''' arrival_rate*(5+random.uniform(0,2)) is used because
+    observer events must be at minimum 5 times the rate of 
+    arrival/departure events. '''
     t = expn_random(arrival_rate*(5+random.uniform(0,2)))
     while t < SIM_TIME:
         observer_events.append({'time':t,'type':'observation'})
@@ -36,7 +45,6 @@ def gen_arrivals(rate):
     arrival_events = []
     t = expn_random(rate) # time of first pkt arrival
     while t < SIM_TIME:
-        # p = Packet(pkt_size=0,arrival_time=t,service_time=0,departure_time=0)
         arrival_events.append({'time':t,'type':'arrival'})
         t += expn_random(rate)
     return arrival_events
@@ -46,8 +54,6 @@ def gen_departures(arrival_events):
     prev_d_time = 0
     departure_events = []
     for ae in arrival_events:
-        # pkt_len = expn_random(1/AVG_PKT_LEN)
-        # service_time = pkt_len/TRANS_RATE
         service_time = gen_service_time()
         d_time = 0
         if (ae['time'] > prev_d_time):
@@ -106,6 +112,7 @@ def simulateMM1(q_util):
             if current_queue_length==0: idle_count+=1
     # P_idle := how often was the queue empty out of the total times we checked it?
     P_idle = idle_count/pkt_type_count['observation']
+    # time average of # of packets in queue; E[N]
     TIME_AVG_PKTS_IN_Q = sum(q_len_observed_over_time)/len(q_len_observed_over_time)
     return {TITLES[0]:q_util,
             TITLES[1]:pkt_type_count['arrival'],
@@ -246,9 +253,10 @@ def question6(f_name='q6.csv', w_type='w'):
             w.writerow([r[t] for t in TITLES_K])
 
 # question1()
-question3()
-SIM_TIME = 2000
-question3('q3.csv','a')
-SIM_TIME = 1000
+# question3()
 # question4()
 # question6()
+# SIM_TIME = 2000
+# question3(w_type='a')
+# question4(w_type='a')
+question6(w_type='a')
