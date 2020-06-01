@@ -1,7 +1,7 @@
 # ECE 358 Labs
 ## Lab 1 - Todo
-- [ ] Test on eceubuntu
-- [ ] Create a `makefile` to run the code
+- [x] Test on eceubuntu
+- [x] Create a `makefile` to run the code
     - check piazza for ideas
 - [ ] Start and finish report
     - [ ] Create graphs for questions 3 and 6
