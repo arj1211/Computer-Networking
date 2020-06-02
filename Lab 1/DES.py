@@ -20,7 +20,8 @@ class Event:
     def __init__(self,etime,etype):
         self.time=etime
         self.type=etype
-    # the __lt__ (less than) function defines comparison for this wrapper class
+    # the __lt__ (less than) function defines
+    #   comparison for this wrapper class
     def __lt__(self, value):
         self.time<value.time
 
@@ -78,7 +79,8 @@ def gen_events(rate, K=0):
     if K == 0:
         # Infinite queue case
         a = gen_arrivals(rate)
-        events = sorted(a+gen_departures(a)+gen_observers(rate), key=lambda e: e['time'])
+        events = sorted(a+gen_departures(a)+gen_observers(rate),
+            key=lambda e: e['time'])
     else:
         # Finite queue case
         a = gen_arrivals(rate)
@@ -96,7 +98,8 @@ def simulateMM1(q_util):
     current_queue_length = 0
     q_len_observed_over_time = []
     arrival_rate = q_util*TRANS_RATE/AVG_PKT_LEN
-    event_list = gen_events(arrival_rate) # the 'source' where 'the next packet' is grabbed
+    # the 'source' where 'the next packet' is grabbed
+    event_list = gen_events(arrival_rate)
     ''' 'q' represents the queue where packets arrive at and depart from. 
         We don't need an actual structure for it in this 
         case since its size is infinite. '''
@@ -110,7 +113,8 @@ def simulateMM1(q_util):
             q_len_observed_over_time.append(current_queue_length)
             # if q empty right now, its idle
             if current_queue_length==0: idle_count+=1
-    # P_idle := how often was the queue empty out of the total times we checked it?
+    # P_idle := how often was the queue empty out of the
+    #   total times we checked it?
     P_idle = idle_count/pkt_type_count['observation']
     # time average of # of packets in queue; E[N]
     TIME_AVG_PKTS_IN_Q = sum(q_len_observed_over_time)/len(q_len_observed_over_time)
@@ -122,7 +126,7 @@ def simulateMM1(q_util):
             TITLES[5]:TIME_AVG_PKTS_IN_Q}
 
 # Simulate M/M/1/K
-def simulateMM1K(q_util, K): # modify inf q to work with finite q
+def simulateMM1K(q_util, K):
     pkt_type_count = {
         'arrival':0, # N_a
         'departure':0, # N_d
@@ -134,12 +138,13 @@ def simulateMM1K(q_util, K): # modify inf q to work with finite q
     pkts_lost_count = 0
     prev_d_time = 0
     arrival_rate = q_util*TRANS_RATE/AVG_PKT_LEN
-    event_list = gen_events(arrival_rate, K) # the 'source' where 'the next packet' is grabbed
+    event_list = gen_events(arrival_rate, K)
+    # converts events stores as dictionaries to Event 
+    #   objects for use with heapq
     event_list = [Event(e['time'],e['type']) for e in event_list]
+    # an initial heapifying of the event list, 
+    #   maintaining the heap invariant: event time
     heapq.heapify(event_list)
-    ''' 'q' represents the queue where packets arrive at and depart from. 
-        We don't need an actual structure for it in this 
-        case since its size is infinite. '''
     while len(event_list) > 0:
         pkt = heapq.heappop(event_list)
         if pkt.type=='arrival':
@@ -166,9 +171,9 @@ def simulateMM1K(q_util, K): # modify inf q to work with finite q
             # if q empty right now, its idle
             if current_queue_length==0:
                 idle_count+=1
-    # P_idle := how often was the queue empty out of the total times we checked it?
     P_idle = idle_count/pkt_type_count['observation']
     TIME_AVG_PKTS_IN_Q = sum(q_len_observed_over_time)/len(q_len_observed_over_time)
+    # P_loss := ratio of packets lost to total packets attempting to arrive
     P_loss = pkts_lost_count/(pkt_type_count['arrival']+pkts_lost_count)
     return {TITLES_K[0]:q_util,
             TITLES_K[1]:K,
@@ -183,11 +188,12 @@ def simulateMM1K(q_util, K): # modify inf q to work with finite q
 def question1(f_name='q1.csv', w_type='w'):
     print('-'*10)
     print('Question 1:')
-    rate = 75
-    iters = int(1E3)
-    randomvars = [expn_random(rate) for i in range(iters)]
+    lam = 75 # lambda
+    # list comprehension of 1000 exponential 
+    #   random vars based on lambda
+    randomvars = [expn_random(lam) for i in range(1000)]
     mean = sum(randomvars)/len(randomvars)
-    variance = sum( [(x - mean) ** 2 for x in randomvars] ) / len(randomvars)
+    variance = sum( [(r - mean) ** 2 for r in randomvars] ) / len(randomvars)
     print('Mean',mean)
     print('Variance',variance)
     print('-'*10)
@@ -252,11 +258,11 @@ def question6(f_name='q6.csv', w_type='w'):
         for r in results:
             w.writerow([r[t] for t in TITLES_K])
 
-# question1()
-# question3()
-# question4()
-# question6()
-# SIM_TIME = 2000
-# question3(w_type='a')
-# question4(w_type='a')
+question1()
+question3()
+question4()
+question6()
+SIM_TIME = 2000
+question3(w_type='a')
+question4(w_type='a')
 question6(w_type='a')
