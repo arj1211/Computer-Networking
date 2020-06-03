@@ -139,7 +139,7 @@ def simulateMM1K(q_util, K):
     prev_d_time = 0
     arrival_rate = q_util*TRANS_RATE/AVG_PKT_LEN
     event_list = gen_events(arrival_rate, K)
-    # converts events stores as dictionaries to Event 
+    # converts events stored as dictionaries to Event 
     #   objects for use with heapq
     event_list = [Event(e['time'],e['type']) for e in event_list]
     # an initial heapifying of the event list, 
@@ -148,8 +148,8 @@ def simulateMM1K(q_util, K):
     while len(event_list) > 0:
         pkt = heapq.heappop(event_list)
         if pkt.type=='arrival':
-            serv_time = gen_service_time()
             if current_queue_length < K:
+                serv_time = gen_service_time()
                 d_time = 0
                 if current_queue_length > 0:
                     d_time = prev_d_time + serv_time
