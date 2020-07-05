@@ -20,12 +20,11 @@ S = (2/3)*(3E8)
 # max number of transmission retries
 K_max = 10
 # simulation time
-T_sim = 1000
+T_sim = 100
 
 def persistent_sim(n, a, R, L):
     # set up the nodes and bus
-    node_list = [Node(rate=a, sim_time=T_sim, _id=i) for i in range(n)]
-    bus = Bus(node_list, a, T_sim, R, D, S, K_max, L)
+    bus = Bus(True, n, a, T_sim) # rest of params are pre-defined for q1
     while bus.find_next_transmitter():
         if not bus.collision():
             bus.transmitted()
@@ -35,11 +34,10 @@ def persistent_sim(n, a, R, L):
     print("thru",thru)
     return {"eff":eff,"thru":thru}
 
-
 def q1():
     N = [20*i for i in range(1,6)]
     A = [7, 10, 20]
-    R = 1 #Mbps
+    R = 1E6 #Mbps
     L = 1500 #bits
     for n in N:
         for a in A:
@@ -47,7 +45,9 @@ def q1():
             persistent_sim(n,a,R,L)
 
 # Do for multiple T_sims
-while T_sim <= 3000:
+''' while T_sim <= 3000:
     print("T_sim",T_sim)
     print(q1())
     T_sim+=1000
+ '''
+persistent_sim(20, 7, 1E6, 1500)
