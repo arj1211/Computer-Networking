@@ -39,7 +39,7 @@ class Node:
 
 class Bus:
     def __init__(self, persistent, num_nodes, arrival_rate=2, sim_time=1000, 
-        data_rate=1, node_distance=10, prop_speed=(2/3)*(3E8), max_trans_retries=10, packet_len=1500):
+        data_rate=1E6, node_distance=10, prop_speed=(2/3)*(3E8), max_trans_retries=10, packet_len=1500):
         self.persistent = persistent
         self.node_list = []
         for i in range(num_nodes):
@@ -77,6 +77,7 @@ class Bus:
         times = []
         for i,n in enumerate(self.node_list):
             if len(n.queue)>0:
+                print('len of transmitter q', len(self.current_transmitter.queue))
                 start_time = self.current_transmitter.queue[0]+abs(self.current_transmitter.id-i)*self.prop_delay
                 times.append((start_time, start_time+self.trans_time))
         return times
