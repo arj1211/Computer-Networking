@@ -1,55 +1,49 @@
 from Helpers import Node, Bus
-# The number of nodes/computers connected to the LAN (variable).
-# N = 10
-# Average packet arrival rate (packets/second) (variable). 
-# Data packets arrive at the MAC layer following a Poisson 
-# process at all nodes.
-# A = 2
-# The speed of the LAN/channel/bus (fixed).
-# R = 20
-# Packet length (fixed).
-# L = 5
-# Distance between adjacent nodes on the bus/channel.
-D = 10
-# Propagation speed
-S = (2/3)*(3E8)
-# Propagation delay
-# p_delay = D/S
-# transmission time
-# trans_time = L/R
-# max number of transmission retries
-K_max = 10
-# simulation time
-T_sim = 1
+import csv
 
-def persistent_sim(n, a, R, L):
+def sim(persistence,n, a, R, L, sim_time):
     # set up the nodes and bus
-    bus = Bus(True, n, a, T_sim) # rest of params are pre-defined for q1
-    
+    bus = Bus(persistence, n, a, sim_time) # rest of params are pre-defined
     while bus.find_next_transmitter():
-        if not bus.collision():
+        c = bus.collision()
+        if not c:
             bus.transmitted()
-    
     eff = bus.successes/bus.transmitted_packets
-    thru = bus.successes*L / (T_sim * R)
-    print("eff",eff)
-    print("thru",thru)
-    return {"eff":eff,"thru":thru}
+    thru = bus.successes*L / (sim_time * R)
+    return {"efficiency":eff,"throughput":thru}
 
-def q1():
+def question(q_num,sim_time):
     N = [20*i for i in range(1,6)]
     A = [7, 10, 20]
     R = 1E6 #Mbps
     L = 1500 #bits
-    for n in N:
-        for a in A:
-            print("N",n,"A",a)
-            persistent_sim(n,a,R,L)
+    f = ""
+    p = True
+    if q_num ==1:
+        print('1-persistent')
+        f="Q1-"+str(sim_time)+".csv"
+        p = True
+    elif q_num == 2:
+        print('non-persistent')
+        f="Q2-"+str(sim_time)+".csv"
+        p = False
+    with open(f, "w", newline='') as f:
+        w = csv.writer(f, delimiter=",")
+        w.writerow(["num_nodes", "arrival_rate", "efficiency", "throughput"])
+        for n in N:
+            for a in A:
+                print('N:',n,', A:',a)
+                r = sim(p,n,a,R,L,sim_time)
+                print("efficiency",r['efficiency'])
+                print("throughput",r['throughput'])
+                w.writerow([n,a,r['efficiency'],r['throughput']])
 
+T_sim = 1000
 # Do for multiple T_sims
-''' while T_sim <= 3000:
+while T_sim <= 3000:
     print("T_sim",T_sim)
-    print(q1())
+    print('Q1:')
+    question(1, T_sim)
+    print('Q2:')
+    question(2, T_sim)
     T_sim+=1000
- '''
-persistent_sim(4, 7, 1E6, 1500)
