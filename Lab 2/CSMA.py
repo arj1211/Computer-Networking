@@ -3,9 +3,13 @@ import csv
 
 def sim(persistence,n, a, R, L, sim_time):
     # set up the nodes and bus
-    bus = Bus(persistence, n, a, sim_time) # rest of params are pre-defined
+    bus = Bus(persistence, n, a, sim_time)
+    # while there exists a next transmitting node
     while bus.find_next_transmitter():
+        # check if a collision will occur
         c = bus.collision()
+        # if no collision occurs, we have a 
+        # successful transmission
         if not c:
             bus.transmitted()
     eff = bus.successes/bus.transmitted_packets
@@ -15,7 +19,7 @@ def sim(persistence,n, a, R, L, sim_time):
 def question(q_num,sim_time):
     N = [20*i for i in range(1,6)]
     A = [7, 10, 20]
-    R = 1E6 #Mbps
+    R = 1E6 # in bps
     L = 1500 #bits
     f = ""
     p = True

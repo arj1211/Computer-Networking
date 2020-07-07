@@ -40,14 +40,16 @@ class Node:
             self.queue.append(Packet(t))
             t += expn_random(self.arrival_rate)
     
-    # Removes first packet from node's queue and updates arrival time of next packet
+    # Removes first packet from node's queue and 
+    # updates arrival time of next packet
     def drop_packet(self):
         if len(self.queue)<=0: return
         d = self.queue.popleft()
         if len(self.queue)>0:
             self.queue[0].time = max(d.time, self.queue[0].time)
     
-    # Applies expn backoff delay given that a node's collision counter is within threshold
+    # Applies expn backoff delay given that a node's 
+    # collision counter is within threshold
     def backoff(self):
         pkt = self.queue[0]
         pkt.collisions+=1
@@ -69,18 +71,17 @@ class Bus:
         self.current_transmitter = None
         self.current_transmitter_pkt = None
         self.max_trans_retries = max_trans_retries
-
         self.prop_delay = node_distance/prop_speed
         self.trans_time = packet_len/data_rate
-        
         self.transmitted_packets = 0
         self.successes = 0
-
         self.init_nodes()
 
-    # next transmitting node
+    # decides next transmitting node by comparing 
+    # arrival times of the first packets in each 
+    # node's queue. Node with earliest arrival time 
+    # is the current transmitting node
     def find_next_transmitter(self):
-        # find first sending node
         self.current_transmitter = None
         t = self.sim_time + 1
         for n in self.node_list:
@@ -90,35 +91,28 @@ class Bus:
                 self.current_transmitter_pkt = n.queue[0]
         return self.current_transmitter
     
-    # generate nodes
+    # generate and initialize nodes with their packet queues
     def init_nodes(self):
         for i in range(self.num_nodes):
             n = Node(i, self.sim_time, self.arrival_rate)
             self.node_list.append(n)
 
-    # when all nodes will consider bus busy given current transmitter node
-    ''' def bus_busy_times(self):
-        times = []
-        self.find_next_transmitter()
-        for i,n in enumerate(self.node_list):
-            if len(n.queue)>0:
-                start_time = self.current_transmitter.queue[0].time+abs(self.current_transmitter.id-i)*self.prop_delay
-                times.append((start_time, start_time+self.trans_time))
-        return times '''
-    
-    # is there going to be a collision if the current transmitter transmits?
+    # determine if a collision will occur if the current 
+    # transmitting node transmits
     def collision(self):
         collision = False
         for i,n in enumerate(self.node_list):
             if n is self.current_transmitter: continue
             if len(n.queue)<=0: continue
-            # times = self.bus_busy_times()
             pkt = n.queue[0]
             pd = abs(self.current_transmitter.id-i)*self.prop_delay
             if pkt.time <= self.current_transmitter_pkt.time+pd:
                 self.transmitted_packets+=1
                 collision = True
                 n.backoff()
+        # if any node experienced a collision that means they tried 
+        # to transmit while the bus was busy. Must apply expn backoff 
+        # for the current transmitting node to retry transmission
         if collision:
             self.transmitted_packets+=1
             self.current_transmitter.backoff()
@@ -128,22 +122,27 @@ class Bus:
     def update_packets(self):
         for i,n in enumerate(self.node_list):
             if len(n.queue) <= 0: continue
-            # if n is self.current_transmitter: continue
-            # busy = self.bus_busy_times()
             pkt = n.queue[0]
-            # print('current transmitter id:', self.current_transmitter.id)
-            # print('transmitting packet\'s time:', self.current_transmitter.queue[0].time)
             pd = abs(self.current_transmitter.id-i)*self.prop_delay
             start_busy = self.current_transmitter_pkt.time + pd
             end_busy = start_busy + self.trans_time
-            if self.persistent:
+            if self.persistent: # 1-persistent case
+                # if a node tries to transmit while bus is busy, 
+                # reschedule the transmission time to the end of the busy period
                 if start_busy <= pkt.time < end_busy:
                     pkt.time = end_busy
-            else:
+            else: # non-persistent case
+                # while the bus is detected as busy
                 while start_busy <= pkt.time < end_busy:
+                    # try to reschedule the node's transmission by delaying 
+                    # it by an exponential backoff. The backoff is determined 
+                    # by how many attempts were made to transmit (up till the 
+                    # max threshold of transmission attempts)
                     if pkt.bus_busy_measure < self.max_trans_retries:
                         pkt.bus_busy_measure=+1
                     pkt.time+=expn_backoff_time(pkt.bus_busy_measure, self.data_rate)
+                # when the bus is no longer detected to be busy, reset the 
+                # counter for transmission attempts
                 pkt.bus_busy_measure=0
             
     # call when packet successfully transmitted
