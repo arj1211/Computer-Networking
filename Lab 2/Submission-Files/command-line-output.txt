@@ -1,0 +1,282 @@
+T_sim 1000
+Q1:
+1-persistent
+N: 20 , A: 7
+efficiency 0.9557530581039755
+throughput 0.210021
+N: 20 , A: 10
+efficiency 0.9007570673884553
+throughput 0.3000075
+N: 20 , A: 20
+efficiency 0.6173540099004559
+throughput 0.6006765
+N: 40 , A: 7
+efficiency 0.79881614707096
+throughput 0.42105
+N: 40 , A: 10
+efficiency 0.6119497376669706
+throughput 0.597993
+N: 40 , A: 20
+efficiency 0.28662905807633626
+throughput 0.9048855
+N: 60 , A: 7
+efficiency 0.5752839311818284
+throughput 0.629268
+N: 60 , A: 10
+efficiency 0.27284030315960894
+throughput 0.8564835
+N: 60 , A: 20
+efficiency 0.22439363141612176
+throughput 0.903468
+N: 80 , A: 7
+efficiency 0.32644585304883494
+throughput 0.822717
+N: 80 , A: 10
+efficiency 0.18997090159871813
+throughput 0.908385
+N: 80 , A: 20
+efficiency 0.18993220536675637
+throughput 0.908637
+N: 100 , A: 7
+efficiency 0.18949589236813907
+throughput 0.8952615
+N: 100 , A: 10
+efficiency 0.16696559640244563
+throughput 0.915315
+N: 100 , A: 20
+efficiency 0.16700302973077272
+throughput 0.915291
+Q2:
+non-persistent
+N: 20 , A: 7
+efficiency 0.9997711261309588
+throughput 0.2096745
+N: 20 , A: 10
+efficiency 0.9996099395406288
+throughput 0.2998365
+N: 20 , A: 20
+efficiency 0.9982425395553776
+throughput 0.598107
+N: 40 , A: 7
+efficiency 0.998521359920282
+throughput 0.4193595
+N: 40 , A: 10
+efficiency 0.9959992137758416
+throughput 0.6004695
+N: 40 , A: 20
+efficiency 0.8186751062768778
+throughput 0.994872
+N: 60 , A: 7
+efficiency 0.9930985745720289
+throughput 0.6302715
+N: 60 , A: 10
+efficiency 0.9610665094437867
+throughput 0.899799
+N: 60 , A: 20
+efficiency 0.657472172864011
+throughput 0.9957015
+N: 80 , A: 7
+efficiency 0.9680536294588058
+throughput 0.8387115
+N: 80 , A: 10
+efficiency 0.5101326609733288
+throughput 0.9957435
+N: 80 , A: 20
+efficiency 0.5107528867223083
+throughput 0.995772
+N: 100 , A: 7
+efficiency 0.42542489515907156
+throughput 0.9950265
+N: 100 , A: 10
+efficiency 0.40148189284951613
+throughput 0.995487
+N: 100 , A: 20
+efficiency 0.4001828310103584
+throughput 0.995472
+T_sim 2000
+Q1:
+1-persistent
+N: 20 , A: 7
+efficiency 0.9546097068330682
+throughput 0.21019575
+N: 20 , A: 10
+efficiency 0.902629519451317
+throughput 0.300162
+N: 20 , A: 20
+efficiency 0.622111434257088
+throughput 0.5995305
+N: 40 , A: 7
+efficiency 0.8002800380051578
+throughput 0.42009
+N: 40 , A: 10
+efficiency 0.6088124423115231
+throughput 0.60055725
+N: 40 , A: 20
+efficiency 0.28710508242983596
+throughput 0.90519
+N: 60 , A: 7
+efficiency 0.573297724299075
+throughput 0.6306285
+N: 60 , A: 10
+efficiency 0.2738062925068439
+throughput 0.855678
+N: 60 , A: 20
+efficiency 0.22421740524902362
+throughput 0.903399
+N: 80 , A: 7
+efficiency 0.32639122125493014
+throughput 0.823605
+N: 80 , A: 10
+efficiency 0.1900201922847652
+throughput 0.908493
+N: 80 , A: 20
+efficiency 0.18971175437113033
+throughput 0.90865575
+N: 100 , A: 7
+efficiency 0.19044885738123882
+throughput 0.894852
+N: 100 , A: 10
+efficiency 0.1668986171176561
+throughput 0.91535025
+N: 100 , A: 20
+efficiency 0.1667542741258577
+throughput 0.91530975
+Q2:
+non-persistent
+N: 20 , A: 7
+efficiency 0.9998207641184104
+throughput 0.209184
+N: 20 , A: 10
+efficiency 0.9995410177930439
+throughput 0.30052725
+N: 20 , A: 20
+efficiency 0.9979564134682084
+throughput 0.5999205
+N: 40 , A: 7
+efficiency 0.9982650285197116
+throughput 0.41858775
+N: 40 , A: 10
+efficiency 0.9959500943897336
+throughput 0.5990595
+N: 40 , A: 20
+efficiency 0.8197454677589199
+throughput 0.99487425
+N: 60 , A: 7
+efficiency 0.9931562791434356
+throughput 0.63018075
+N: 60 , A: 10
+efficiency 0.9601743686136496
+throughput 0.9003255
+N: 60 , A: 20
+efficiency 0.6576379594064831
+throughput 0.995703
+N: 80 , A: 7
+efficiency 0.9677407656840905
+throughput 0.8406135
+N: 80 , A: 10
+efficiency 0.5108422637049076
+throughput 0.99575775
+N: 80 , A: 20
+efficiency 0.5100677844727303
+throughput 0.995763
+N: 100 , A: 7
+efficiency 0.4246239101058576
+throughput 0.99501675
+N: 100 , A: 10
+efficiency 0.4003641969704145
+throughput 0.99547725
+N: 100 , A: 20
+efficiency 0.4009228407619417
+throughput 0.9954855
+T_sim 3000
+Q1:
+1-persistent
+N: 20 , A: 7
+efficiency 0.9566090020640658
+throughput 0.209715
+N: 20 , A: 10
+efficiency 0.905424464334147
+throughput 0.300447
+N: 20 , A: 20
+efficiency 0.6241611052448153
+throughput 0.5999655
+N: 40 , A: 7
+efficiency 0.8025195901375172
+throughput 0.420818
+N: 40 , A: 10
+efficiency 0.6129494545022132
+throughput 0.6005075
+N: 40 , A: 20
+efficiency 0.2868421215256216
+throughput 0.905123
+N: 60 , A: 7
+efficiency 0.5774353466347808
+throughput 0.6300885
+N: 60 , A: 10
+efficiency 0.27500865309636296
+throughput 0.856115
+N: 60 , A: 20
+efficiency 0.2243389859043503
+throughput 0.90345
+N: 80 , A: 7
+efficiency 0.3288243713611782
+throughput 0.823259
+N: 80 , A: 10
+efficiency 0.18994747242809418
+throughput 0.9086295
+N: 80 , A: 20
+efficiency 0.18975684701413645
+throughput 0.9087185
+N: 100 , A: 7
+efficiency 0.18971374229469268
+throughput 0.8959185
+N: 100 , A: 10
+efficiency 0.16683784774441057
+throughput 0.915338
+N: 100 , A: 20
+efficiency 0.1668562264698526
+throughput 0.9152925
+Q2:
+non-persistent
+N: 20 , A: 7
+efficiency 0.9997759621709742
+throughput 0.209739
+N: 20 , A: 10
+efficiency 0.9995899993166655
+throughput 0.2998765
+N: 20 , A: 20
+efficiency 0.9980644265874153
+throughput 0.600466
+N: 40 , A: 7
+efficiency 0.9984557638199025
+throughput 0.4196235
+N: 40 , A: 10
+efficiency 0.9960834674146981
+throughput 0.599578
+N: 40 , A: 20
+efficiency 0.8194444272846817
+throughput 0.9948715
+N: 60 , A: 7
+efficiency 0.9928700311231927
+throughput 0.6300505
+N: 60 , A: 10
+efficiency 0.9595452895663793
+throughput 0.9001835
+N: 60 , A: 20
+efficiency 0.6575097277549315
+throughput 0.9957015
+N: 80 , A: 7
+efficiency 0.9673451894811971
+throughput 0.8396445
+N: 80 , A: 10
+efficiency 0.5103556702483977
+throughput 0.9957575
+N: 80 , A: 20
+efficiency 0.5100282607053268
+throughput 0.9957575
+N: 100 , A: 7
+efficiency 0.4249496428502029
+throughput 0.99503
+N: 100 , A: 10
+efficiency 0.40071486033173237
+throughput 0.9954805
