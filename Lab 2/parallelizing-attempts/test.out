@@ -1,0 +1,18 @@
+1-persistent
+[
+    {'n': 20, 'a': 7, 'efficiency': 0.9513121010503564, 'throughput': 0.2112555},
+    {'n': 20, 'a': 10, 'efficiency': 0.9021642334781552, 'throughput': 0.3008835},
+    {'n': 20, 'a': 20, 'efficiency': 0.6170392239561366, 'throughput': 0.5990985},
+    {'n': 40, 'a': 7, 'efficiency': 0.8004782995822013, 'throughput': 0.420741},
+    {'n': 40, 'a': 10, 'efficiency': 0.6125104780118825, 'throughput': 0.599547},
+    {'n': 40, 'a': 20, 'efficiency': 0.2872006937840264, 'throughput': 0.905088},
+    {'n': 60, 'a': 7, 'efficiency': 0.5755937063148325, 'throughput': 0.62874},
+    {'n': 60, 'a': 10, 'efficiency': 0.27412093618776046, 'throughput': 0.855525},
+    {'n': 60, 'a': 20, 'efficiency': 0.22413372058826814, 'throughput': 0.9031215},
+    {'n': 80, 'a': 7, 'efficiency': 0.3265919438829594, 'throughput': 0.82353},
+    {'n': 80, 'a': 10, 'efficiency': 0.18999360748181834, 'throughput': 0.9085785},
+    {'n': 80, 'a': 20, 'efficiency': 0.18986590303719497, 'throughput': 0.908616}, 
+    {'n': 100, 'a': 7, 'efficiency': 0.1898583400824533, 'throughput': 0.894912},
+    {'n': 100, 'a': 10, 'efficiency': 0.16680334949471093, 'throughput': 0.915276},
+    {'n': 100, 'a': 20, 'efficiency': 0.16669858320614525, 'throughput': 0.9153225}
+]
